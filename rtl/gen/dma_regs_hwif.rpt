@@ -1,0 +1,15 @@
+hwif_in.INT_STATUS.DONE.hwset
+hwif_in.INT_STATUS.ERR.hwset
+hwif_in.STATUS.BUSY.next
+hwif_in.STATUS.DONE.next
+hwif_in.STATUS.ERR.next
+hwif_in.STATUS.ERR_CODE.next[1:0]
+hwif_out.INT_STATUS.DONE.value
+hwif_out.INT_STATUS.ERR.value
+hwif_out.INT_ENABLE.DONE.value
+hwif_out.INT_ENABLE.ERR.value
+hwif_out.SRC.ADDR.value[31:0]
+hwif_out.DST.ADDR.value[31:0]
+hwif_out.LEN.BYTES.value[31:0]
+hwif_out.CTRL.START.value
+hwif_out.CTRL.MAX_BURST.value[7:0]

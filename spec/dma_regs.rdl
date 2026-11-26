@@ -1,0 +1,61 @@
+// DMA register map (see spec/dma_spec.md).
+// Generates: rtl/gen/dma_regs.sv (PeakRDL-regblock) and the UVM register model (PeakRDL-uvm).
+
+addrmap dma_regs {
+    name = "DMA registers";
+    default regwidth = 32;
+
+    reg {
+        name = "VERSION";
+        field { sw = r; hw = na; } VERSION[31:0] = 32'h0001_0000;
+    } VERSION @ 0x00;
+
+    reg {
+        name = "INT_STATUS";
+        desc = "Set by hardware, write 1 to clear. A hardware set wins over a same-cycle clear.";
+        field {
+            sw = rw; onwrite = woclr;
+            hw = r; hwset = true; precedence = hw;
+        } DONE[0:0] = 0, ERR[1:1] = 0;
+    } INT_STATUS @ 0x04;
+
+    reg {
+        name = "INT_ENABLE";
+        field { sw = rw; hw = r; } DONE[0:0] = 0, ERR[1:1] = 0;
+    } INT_ENABLE @ 0x08;
+
+    reg {
+        name = "SRC";
+        field { sw = rw; hw = r; } ADDR[31:0] = 0;
+    } SRC @ 0x0C;
+
+    reg {
+        name = "DST";
+        field { sw = rw; hw = r; } ADDR[31:0] = 0;
+    } DST @ 0x10;
+
+    reg {
+        name = "LEN";
+        field { sw = rw; hw = r; } BYTES[31:0] = 0;
+    } LEN @ 0x14;
+
+    reg {
+        name = "CTRL";
+        field {
+            desc = "Write 1 to start. Self-clearing one-cycle pulse; always reads 0.";
+            sw = w; hw = r; singlepulse = true;
+        } START[0:0] = 0;
+        field {
+            desc = "Beats per burst minus 1 (0..255).";
+            sw = rw; hw = r;
+        } MAX_BURST[15:8] = 8'h0F;
+    } CTRL @ 0x18;
+
+    reg {
+        name = "STATUS";
+        field { sw = r; hw = w; } BUSY[0:0], DONE[1:1], ERR[2:2];
+        // Separate definition: sharing one field type with the 1-bit fields makes
+        // PeakRDL-regblock reuse the 1-bit hwif struct for this 2-bit field.
+        field { sw = r; hw = w; } ERR_CODE[5:4];
+    } STATUS @ 0x1C;
+};

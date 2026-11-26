@@ -1,0 +1,12 @@
+`verilator_config
+// Generated register block: struct fields written from several processes, unused APB bits
+lint_off -rule MULTIDRIVEN -file "*rtl/gen/*"
+lint_off -rule UNUSEDSIGNAL -file "*rtl/gen/*"
+lint_off -rule UNUSEDPARAM -file "*rtl/gen/*"
+// Intentionally unused bits: only addr[11:2] sets the 4 KB room; only the carry of the
+// 33-bit range check matters; resp[1] alone marks SLVERR/DECERR.
+lint_off -rule UNUSEDSIGNAL -file "*rtl/dma_burst_calc.sv" -match "*'src'*"
+lint_off -rule UNUSEDSIGNAL -file "*rtl/dma_burst_calc.sv" -match "*'dst'*"
+lint_off -rule UNUSEDSIGNAL -file "*rtl/dma_ctx.sv" -match "*_last'*"
+lint_off -rule UNUSEDSIGNAL -file "*rtl/dma_rd_engine.sv" -match "*'rresp'*"
+lint_off -rule UNUSEDSIGNAL -file "*rtl/dma_wr_engine.sv" -match "*'bresp'*"
