@@ -23,9 +23,9 @@ jobs:
           sudo apt-get install -y git autoconf flex bison help2man perl make g++ \
                libfl-dev zlib1g-dev ccache z3 python3
 
-      - name: Cache Verilator
+      - name: Restore Verilator
         id: cache-verilator
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: ~/verilator
           key: verilator-${{ env.VERILATOR_VERSION }}-${{ runner.os }}
@@ -35,6 +35,14 @@ jobs:
         run: |
           git clone --depth 1 --branch $VERILATOR_VERSION https://github.com/verilator/verilator.git vsrc
           cd vsrc && autoconf && ./configure --prefix=$HOME/verilator && make -j$(nproc) && make install
+
+      # Save right after building, so a later failing step does not lose a 20-minute build
+      - name: Save Verilator
+        if: steps.cache-verilator.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/verilator
+          key: verilator-${{ env.VERILATOR_VERSION }}-${{ runner.os }}
 
       - name: Get UVM (copy bundled with Verilator's tests)
         run: |

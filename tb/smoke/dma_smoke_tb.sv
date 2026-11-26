@@ -323,6 +323,7 @@ module dma_smoke_tb;
         end
 
         $display("\n==== SMOKE TEST %s (%0d errors) ====", errors == 0 ? "PASSED" : "FAILED", errors);
+        if (errors != 0) $fatal(1, "smoke test failed");   // non-zero exit code for CI
         $finish;
     end
 

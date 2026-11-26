@@ -1,6 +1,6 @@
 # DMA project - common commands
 PEAKRDL ?= $(HOME)/tools/pyenv/bin/peakrdl
-VFLAGS  := --binary --timing --assert -j 0 -Wno-fatal -Wno-WIDTH rtl/lint.vlt -f rtl/dma.f
+VFLAGS  := --binary --timing --assert -j 4 -Wno-fatal -Wno-WIDTH rtl/lint.vlt -f rtl/dma.f
 SEED    ?= 1
 
 .PHONY: regs ral lint smoke tb test clean
@@ -17,6 +17,7 @@ lint:   ## Verilator lint, all warnings
 	verilator --lint-only -Wall --assert rtl/lint.vlt -f rtl/dma.f --top-module dma_top
 
 smoke:  ## build and run the directed smoke test (SEED=n)
+	@mkdir -p build
 	verilator $(VFLAGS) -Mdir build/smoke tb/smoke/dma_smoke_tb.sv --top-module dma_smoke_tb -o sim > build/smoke.log 2>&1 \
 	    || (tail -20 build/smoke.log; exit 1)
 	./build/smoke/sim +verilator+seed+$(SEED)
